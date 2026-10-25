@@ -1,0 +1,21 @@
+# Netlify configuration for the TradeVault web app.
+#
+# The repository is a monorepo (npm workspaces). Netlify builds from the
+# repository root so that the shared @tradevault/core package is installed,
+# and publishes the web app's Vite output.
+
+[build]
+  base = "."
+  command = "npm run build --workspace @tradevault/web"
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# The app is a single-page application: every route resolves to index.html and
+# the client decides what to render. Without this, a refresh on any page other
+# than "/" would 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TradeVault — mobile UI preview</title>
+<style>
+  :root {
+    --page: #0b0b0c;
+    --page-2: #121214;
+    --page-line: #232326;
+    --page-text: #f2f1ec;
+    --page-muted: #8e8e88;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 70% at 50% -10%, #1a1a1d 0%, var(--page) 55%);
+    color: var(--page-text);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 44px 28px 72px;
+  }
+  header { max-width: 1180px; margin: 0 auto 34px; }
+  .eyebrow {
+    font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--page-muted); margin: 0 0 12px; font-weight: 700;
+  }
+  h1 { font-size: 33px; font-weight: 600; letter-spacing: -.03em; margin: 0 0 10px; }
+  h1 b { font-weight: 750; }
+  header p { color: var(--page-muted); max-width: 720px; line-height: 1.6; font-size: 13.5px; margin: 0; }
+  .row {
+    display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;
+    align-items: flex-start; max-width: 1400px; margin: 0 auto;
+  }
+  figure { margin: 0; }
+  figcaption { margin-top: 16px; text-align: center; font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--page-muted); }
+  figcaption b { display: block; color: var(--page-text); font-weight: 600; letter-spacing: .01em;
+    text-transform: none; font-size: 13.5px; margin-bottom: 3px; }
+
+  /* ---------------- phone shell ---------------- */
+  .phone {
+    width: 390px; height: 844px; border-radius: 46px; padding: 9px;
+    background: linear-gradient(160deg, #303034, #141416 40%, #2a2a2e);
+    box-shadow: 0 44px 90px -34px #000, 0 0 0 1px #000 inset;
+    position: relative;
+  }
+  .screen {
+    position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .scroll {
+    position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+    padding: 30px 18px 96px; scrollbar-width: none;
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+
+  /* ---------------- theme variables ---------------- */
+  .dark {
+    --bg: #131313; --surface: #1b1b1a; --raised: #222221;
+    --border: #2e2e2c; --strong: #3d3d3a;
+    --text: #f2f1ec; --muted: #a3a29a; --faint: #77766f;
+    --accent: #a78bfa; --accent-ink: #c4b5fd; --accent-on: #131313; --accent-soft: rgba(167,139,250,.16);
+    --coral: #3d2a22; --coral-ink: #f9b69f;
+    --yellow: #3a3220; --yellow-ink: #f7df8f;
+    --pink: #3a2530; --pink-ink: #f6cee0;
+    --blue: #1f2c3c; --blue-ink: #b6d5f4;
+    --cool: #16202b; --warm: #2a1f1c;
+    --profit: #4ade80; --loss: #f87171; --warn: #fbbf24; --info: #60a5fa;
+    --profit-soft: rgba(34,197,94,.16); --loss-soft: rgba(239,68,68,.16);
+    --info-soft: rgba(96,165,250,.16); --warn-soft: rgba(251,191,36,.16);
+    --neutral-soft: rgba(143,143,136,.16);
+    --ink: #f2f1ec; --on-ink: #131313;
+    --footer: #1c1c1b; --footer-text: #ececea; --footer-muted: #8d8d86;
+    --status: #e6e6e6;
+    background: var(--bg); color: var(--text);
+  }
+  .light {
+    --bg: #ffffff; --surface: #ffffff; --raised: #fafbf8;
+    --border: #e9e9e7; --strong: #d6d6d2;
+    --text: #2f2f2f; --muted: #64655e; --faint: #94958c;
+    --accent: #6d28d9; --accent-ink: #5b21b6; --accent-on: #ffffff; --accent-soft: rgba(109,40,217,.10);
+    --coral: #f9b69f; --coral-ink: #341109;
+    --yellow: #f7df8f; --yellow-ink: #2c1900;
+    --pink: #f6cee0; --pink-ink: #320d1e;
+    --blue: #b6d5f4; --blue-ink: #081f38;
+    --cool: #f6fafd; --warm: #fff0ec;
+    --profit: #15803d; --loss: #b91c1c; --warn: #92400e; --info: #2563eb;
+    --profit-soft: rgba(22,163,74,.12); --loss-soft: rgba(220,38,38,.10);
+    --info-soft: rgba(37,99,235,.10); --warn-soft: rgba(180,83,9,.12);
+    --neutral-soft: rgba(138,139,131,.14);
+    --ink: #141412; --on-ink: #ffffff;
+    --footer: #2f2f2f; --footer-text: #ececea; --footer-muted: #a5a59e;
+    --status: #2b2b2b;
+    background: var(--bg); color: var(--text);
+  }
+
+  /* ---------------- in-app components ---------------- */
+  .statusbar {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 4;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 26px 0; font-size: 11px; font-weight: 600; color: var(--status);
+  }
+  .statusbar .dots { display: flex; gap: 5px; align-items: center; }
+  .statusbar i { display: block; width: 12px; height: 8px; border-radius: 2px; background: currentColor; opacity: .75; }
+
+  .content > * + * { margin-top: 16px; }
+  .eyebrow-app {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--faint);
+  }
+  h2.title { font-size: 30px; line-height: 34px; letter-spacing: -1px; font-weight: 700; margin: 4px 0 0; }
+  .sub { font-size: 13px; line-height: 19px; color: var(--muted); margin-top: 6px; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 5px; min-height: 118px; }
+  .stat.neutral { background: var(--surface); border: 1px solid var(--border); padding: 15px; gap: 4px; min-height: 0; }
+  .stat .label {
+    font-size: 10px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; opacity: .66;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .stat.neutral .label { color: var(--faint); opacity: 1; font-size: 10.5px; letter-spacing: .7px; }
+  .stat .value { font-size: 26px; line-height: 29px; font-weight: 700; letter-spacing: -.9px; font-variant-numeric: tabular-nums; }
+  .stat.neutral .value { font-size: 19px; line-height: 24px; letter-spacing: -.4px; color: var(--text); }
+  .stat .hint { font-size: 11.5px; line-height: 16px; opacity: .68; }
+  .stat.neutral .hint { color: var(--text); opacity: .55; }
+  .coral { background: var(--coral); color: var(--coral-ink); }
+  .yellow { background: var(--yellow); color: var(--yellow-ink); }
+  .pink { background: var(--pink); color: var(--pink-ink); }
+  .blue { background: var(--blue); color: var(--blue-ink); }
+  .chip {
+    font-size: 9px; font-weight: 700; letter-spacing: .7px; border: 1px solid currentColor;
+    border-radius: 999px; padding: 1px 6px; text-transform: uppercase;
+  }
+
+  .panel { border-radius: 18px; padding: 18px; background: var(--cool); }
+  .panel.warm { background: var(--warm); }
+  .card { border-radius: 18px; padding: 18px; background: var(--surface); border: 1px solid var(--border); }
+  .card-title { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
+  .hint { font-size: 12px; line-height: 17px; color: var(--faint); }
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  .rows { display: flex; flex-direction: column; }
+  .listrow {
+    display: flex; justify-content: space-between; gap: 14px; align-items: flex-start;
+    padding: 12px 0; border-top: 1px solid var(--border);
+  }
+  .listrow:first-child { border-top: 0; }
+  .listrow .stack { min-width: 0; }
+  .listrow .l { font-size: 13px; color: var(--muted); }
+  .listrow .n { font-size: 11.5px; line-height: 16px; color: var(--faint); margin-top: 3px; }
+  .listrow .v { font-size: 16px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pos { color: var(--profit); } .neg { color: var(--loss); } .na { color: var(--faint); }
+
+  .openrow { padding-top: 11px; border-top: 1px solid var(--border); }
+  .openrow.first { padding-top: 0; border-top: 0; }
+  .openrow .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .openrow .sym { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .openrow .pnl { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .row-between { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+
+  .badge {
+    font-size: 11px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+    align-self: flex-start;
+  }
+  .badge.long, .badge.profit { background: var(--profit-soft); color: var(--profit); }
+  .badge.short, .badge.loss { background: var(--loss-soft); color: var(--loss); }
+  .badge.open { background: var(--info-soft); color: var(--info); }
+  .badge.partial { background: var(--warn-soft); color: var(--warn); }
+  .badge.closed { background: var(--neutral-soft); color: var(--faint); }
+  .badge.neutral { background: var(--raised); color: var(--muted); }
+  .badge.accent { background: var(--accent-soft); color: var(--accent-ink); }
+
+  .seg {
+    display: flex; gap: 3px; padding: 3px; border-radius: 14px;
+    background: var(--raised); border: 1px solid var(--strong);
+  }
+  .seg button {
+    flex: 1; border: 0; background: none; padding: 8px 0; border-radius: 10px;
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-on); }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; width: 100%;
+    padding: 13px 16px; border-radius: 14px; border: 1px solid var(--ink);
+    background: var(--ink); color: var(--on-ink); font-size: 14px; font-weight: 600;
+  }
+  .btn.secondary { background: var(--raised); color: var(--text); border-color: var(--strong); }
+
+  .footerband { background: var(--footer); border-radius: 18px; padding: 18px; }
+  .footerband .top { display: flex; align-items: baseline; gap: 8px; }
+  .footerband .name { color: var(--footer-text); font-size: 13.5px; font-weight: 700; }
+  .footerband .cap { color: var(--footer-muted); font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+  .footerband p { color: var(--footer-muted); font-size: 11.5px; line-height: 17px; margin: 7px 0 0; }
+
+  .trade-card {
+    border-radius: 18px; border: 1px solid var(--border); background: var(--surface);
+    padding: 16px; display: flex; flex-direction: column; gap: 9px;
+  }
+  .trade-card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .trade-card .sym { font-size: 16.5px; font-weight: 700; letter-spacing: -.3px; }
+  .trade-card .pnl { font-size: 16.5px; font-weight: 700; letter-spacing: -.4px; font-variant-numeric: tabular-nums; }
+  .trade-card .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .trade-card .meta { display: flex; justify-content: space-between; gap: 12px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .field .input {
+    border: 1px solid var(--strong); border-radius: 14px; background: var(--surface);
+    padding: 11px 12px; font-size: 14px; color: var(--text);
+  }
+  .field .input.ph { color: var(--faint); }
+
+  /* ---------------- tab bar ---------------- */
+  .tabbar {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; background: var(--surface); border-top: 1px solid var(--border);
+    padding: 8px 6px 20px;
+  }
+  .tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: var(--faint);
+  }
+  .tab span { font-size: 10px; font-weight: 600; letter-spacing: .1px; }
+  .tab.active { color: var(--accent-ink); }
+  .tab svg { display: block; }
+
+  /* ---------------- page notes ---------------- */
+  .notes {
+    max-width: 1180px; margin: 56px auto 0; border-top: 1px solid var(--page-line);
+    padding-top: 26px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+  }
+  .notes h3 { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--page-muted);
+    margin: 0 0 8px; font-weight: 700; }
+  .notes p { margin: 0; font-size: 12.5px; line-height: 1.65; color: #b9b9b2; }
+  .notes code { color: #e7e7e1; font-size: 11.5px; }
+  @media (max-width: 900px) { .notes { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">TradeVault · Android UI</p>
+    <h1>Matched to the <b>website</b></h1>
+    <p>The same four pastel blocks, the same near-black slab for the primary action, the same editorial
+       page head and the same hairline cards — translated to a 390 dp phone. Dark is the default;
+       the light phone is the identical layout under the OS light theme. Scroll inside any phone.</p>
+  </header>
+
+  <div class="row" id="phones"></div>
+
+  <div class="notes">
+    <div>
+      <h3>What changed</h3>
+      <p>In-screen display headers replace the Android toolbar. Page padding is 18, cards are 18-radius
+         with 18 padding, and numbers use tabular figures so P&amp;L columns line up.</p>
+    </div>
+    <div>
+      <h3>What stayed honest</h3>
+      <p>Figures come from the same engine: open trades stay out of realised stats, undefined values
+         read <code>N/A</code>, and totals are never summed across currencies. The app itself shows
+         your records — the sample numbers here exist only in this preview.</p>
+    </div>
+    <div>
+      <h3>Tokens</h3>
+      <p>The palette is copied value-for-value from <code>app.css</code>: <code>#131313</code> canvas,
+         <code>#3d2a22</code> coral, <code>#f9b69f</code> coral ink, <code>#a78bfa</code> accent.
+         No new colours were invented for the phone.</p>
+    </div>
+  </div>
+
+<script>
+const icons = {
+  dashboard: "M3 12l9-8 9 8v8a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z",
+  trades: "M4 6h16M4 12h16M4 18h10",
+  add: "M12 5v14M5 12h14",
+  analytics: "M4 20V10M10 20V4M16 20v-7M22 20H2",
+  journal: "M6 3h11a2 2 0 012 2v16H6a2 2 0 01-2-2V5a2 2 0 012-2zm2 5h7M8 12h7M8 16h4",
+};
+
+const tab = (key, label, active) => `
+  <div class="tab ${active === key ? "active" : ""}">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="${icons[key]}"></path>
+    </svg>
+    <span>${label}</span>
+  </div>`;
+
+const chrome = (theme, active, content, showTabs = true) => `
+  <div class="phone">
+    <div class="screen ${theme}">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="scroll" ${showTabs ? "" : 'style="padding-bottom:40px"'}><div class="content">${content}</div></div>
+      ${showTabs ? `<div class="tabbar">
+        ${tab("dashboard", "Dashboard", active)}
+        ${tab("trades", "Trades", active)}
+        ${tab("add", "Add", active)}
+        ${tab("analytics", "Stats", active)}
+        ${tab("journal", "Journal", active)}
+      </div>` : ""}
+    </div>
+  </div>`;
+
+const equityChart = () => `
+  <svg viewBox="0 0 320 150" width="100%" height="150" preserveAspectRatio="none" style="margin-top:4px">
+    <defs>
+      <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--accent)" stop-opacity=".22" />
+        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <path d="M0,118 L40,108 L80,114 L120,92 L160,96 L200,70 L240,76 L280,48 L320,38 L320,150 L0,150 Z"
+          fill="url(#fill)" />
+    <path d="M0,118 L40,108 L80,114 L120,92 L160,96 L200,70 L240,76 L280,48 L320,38"
+          fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" />
+    <g fill="var(--profit)">
+      <circle cx="40" cy="108" r="2.5" /><circle cx="120" cy="92" r="2.5" />
+      <circle cx="200" cy="70" r="2.5" /><circle cx="320" cy="38" r="2.5" />
+    </g>
+    <g fill="var(--loss)"><circle cx="80" cy="114" r="2.5" /><circle cx="160" cy="96" r="2.5" /><circle cx="240" cy="76" r="2.5" /></g>
+    <text x="2" y="12" fill="var(--faint)" font-size="9">$29,860</text>
+    <text x="2" y="148" fill="var(--faint)" font-size="9">$24,120</text>
+  </svg>`;
+
+const dashboard = () => `
+  <div class="eyebrow-app">Trading journal</div>
+  <h2 class="title">Dashboard</h2>
+  <p class="sub">Main Account · all figures in USD, closed trades only.</p>
+
+  <div class="stat-grid" style="margin-top:16px">
+    <div class="stat coral">
+      <div class="label">Net realised P&amp;L <span class="chip">profit</span></div>
+      <div class="value">+$4,182.60</div>
+      <div class="hint">Across 14 closed trades, after $96.40 of costs</div>
+    </div>
+    <div class="stat yellow">
+      <div class="label">Win rate</div>
+      <div class="value">58.3%</div>
+      <div class="hint">7 won · 5 lost</div>
+    </div>
+    <div class="stat pink">
+      <div class="label">Profit factor</div>
+      <div class="value">1.94</div>
+      <div class="hint">$8,630.00 won / $4,447.40 lost</div>
+    </div>
+    <div class="stat blue">
+      <div class="label">Return on $100,000.00</div>
+      <div class="value">+4.18%</div>
+      <div class="hint">Net realised P&amp;L over starting capital plus adjustments</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="card-title">Equity curve</div>
+    <div class="hint">Main Account · USD · closed trades only, oldest first.</div>
+    ${equityChart()}
+    <div class="row-between" style="margin-top:6px">
+      <span class="hint">Start $24,120.00</span>
+      <span class="hint">Latest $29,860.00</span>
+      <span class="hint">Change +$5,740.00</span>
+    </div>
+    <div class="divider"></div>
+    <div class="row-between">
+      <div>
+        <div class="card-title">Open positions</div>
+        <div class="hint">Unrealised. Excluded from every figure above.</div>
+      </div>
+      <span class="badge open">2</span>
+    </div>
+    <div class="openrow first" style="margin-top:10px">
+      <div class="top">
+        <div class="sym">NAS100 <span class="badge long">Long</span> <span class="badge partial">Partly closed</span></div>
+        <div class="pnl pos">+$182.40</div>
+      </div>
+      <div class="hint" style="margin-top:4px">1.0000 · 0.5000 still open · realised so far</div>
+    </div>
+    <div class="openrow">
+      <div class="top">
+        <div class="sym">EURUSD <span class="badge short">Short</span></div>
+        <div class="pnl na">N/A</div>
+      </div>
+      <div class="hint" style="margin-top:4px">0.5000 open · nothing realised yet</div>
+    </div>
+  </div>
+
+  <div class="panel warm">
+    <div class="card-title">Trade quality</div>
+    <div class="hint">What the result was made of, not just how big it was.</div>
+    <div class="rows" style="margin-top:10px">
+      <div class="listrow">
+        <div class="stack"><div class="l">Average R</div><div class="n">11 trades had a stop loss</div></div>
+        <div class="v">1.42</div>
+      </div>
+      <div class="listrow">
+        <div class="stack"><div class="l">Expectancy per trade</div><div class="n">Net P&amp;L divided by closed trades</div></div>
+        <div class="v pos">+$298.76</div>
+      </div>
+      <div class="listrow">
+        <div class="stack"><div class="l">Largest win</div><div class="n">Largest loss $412.00</div></div>
+        <div class="v pos">+$820.00</div>
+      </div>
+      <div class="listrow">
+        <div class="stack"><div class="l">Max drawdown</div><div class="n">$28,940.00 → $27,120.00</div></div>
+        <div class="v neg">6.29%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="eyebrow-app" style="margin-top:4px">Breakdown</div>
+
+  <div class="card">
+    <div class="card-title">Result mix</div>
+    <div style="display:flex;height:14px;border-radius:7px;overflow:hidden;margin-top:12px">
+      <div style="flex:7;background:var(--profit)"></div>
+      <div style="flex:2;background:var(--faint)"></div>
+      <div style="flex:5;background:var(--loss)"></div>
+    </div>
+    <div class="row-between" style="margin-top:10px">
+      <span class="hint">Wins 7 (50%)</span>
+      <span class="hint">Breakeven 2 (14%)</span>
+      <span class="hint">Losses 5 (36%)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Streaks</div>
+    <div style="margin-top:4px">
+      <div class="listrow" style="border-top:0">
+        <div class="l">Current</div><div class="v">3 wins</div>
+      </div>
+      <div class="listrow">
+        <div class="l">Longest win run</div><div class="v">4</div>
+      </div>
+      <div class="listrow">
+        <div class="l">Longest loss run</div><div class="v">2</div>
+      </div>
+      <div class="hint" style="margin-top:8px">Breakeven trades neither extend nor break a streak — a scratch is not evidence of a run.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Review your week</div>
+    <div class="hint">3 entries recorded. Writing down why a trade worked is what turns a result into a lesson.</div>
+    <div class="btn" style="margin-top:12px">Open journal</div>
+  </div>
+
+  <div class="footerband">
+    <div class="top"><span class="name">TradeVault</span><span class="cap">Trading journal</span></div>
+    <p>A journal and analysis tool. It does not place trades, connect to a broker, or tell you what
+       will happen next.</p>
+  </div>`;
+
+const trades = () => `
+  <div class="eyebrow-app">Journal</div>
+  <h2 class="title">Trades</h2>
+  <p class="sub">12 recorded · 2 still open · realised figures only count closed trades.</p>
+
+  <div class="seg" style="margin-top:16px">
+    <button aria-pressed="true">All</button>
+    <button>Open</button>
+    <button>Closed</button>
+  </div>
+
+  <p class="hint">Showing 12 of 12 trades.</p>
+
+  ${[
+    ["NAS100", "+$182.40", "pos", "Long", "Partial", "USD", "Trend"],
+    ["EURUSD", "N/A", "na", "Short", "Open", "USD", "Range"],
+    ["XAUUSD", "+$640.00", "pos", "Long", "Closed", "USD", "Breakout"],
+  ].map(([sym, pnl, tone, dir, status, cur, strat]) => `
+    <div class="trade-card">
+      <div class="top"><div class="sym">${sym}</div><div class="pnl ${tone}">${pnl}</div></div>
+      <div class="chips">
+        <span class="badge ${dir.toLowerCase()}">${dir}</span>
+        <span class="badge ${status.toLowerCase() === "partial" ? "partial" : status.toLowerCase() === "open" ? "open" : "closed"}">${status}</span>
+        <span class="badge neutral">${cur}</span>
+        <span class="badge accent">${strat}</span>
+      </div>
+      <div class="divider" style="margin:2px 0"></div>
+      <div class="meta"><span class="hint">Oct ${sym === "NAS100" ? "21" : sym === "EURUSD" ? "20" : "18"} · held ${sym === "XAUUSD" ? "2d 4h" : "6h 20m"}</span><span class="hint">${sym === "NAS100" ? "1.8R" : sym === "EURUSD" ? "N/A" : "2.4R"}</span></div>
+      <div class="hint">Entry ${sym === "NAS100" ? "18,420.00" : sym === "EURUSD" ? "1.08420" : "2,312.40"}${sym === "EURUSD" ? " → still open" : " → Exit " + (sym === "NAS100" ? "18,510.00" : "2,348.80")}</div>
+    </div>`).join("")}
+
+  <div class="trade-card">
+    <div class="top"><div class="sym">GBPUSD</div><div class="pnl neg">-$186.50</div></div>
+    <div class="chips">
+      <span class="badge short">Short</span>
+      <span class="badge closed">Closed</span>
+      <span class="badge neutral">USD</span>
+      <span class="badge accent">Range</span>
+    </div>
+    <div class="divider" style="margin:2px 0"></div>
+    <div class="meta"><span class="hint">Oct 17 · held 1d 2h</span><span class="hint">-1.0R</span></div>
+    <div class="hint">Entry 1.26840 → Exit 1.27055</div>
+  </div>
+
+  <div class="footerband">
+    <div class="top"><span class="name">TradeVault</span><span class="cap">Trading journal</span></div>
+    <p>A journal and analysis tool. It does not place trades, connect to a broker, or tell you what
+       will happen next.</p>
+  </div>`;
+
+const addTrade = () => `
+  <div class="eyebrow-app">Record</div>
+  <h2 class="title">Add trade</h2>
+  <p class="sub">The calculation below updates as you type and uses the same engine as your dashboard.</p>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Live calculation</div>
+    <div class="hint">Computed from the values below by the same engine that powers your dashboard. Nothing is saved until you press Save.</div>
+    <div class="stat-grid" style="margin-top:12px">
+      <div class="stat neutral" style="grid-column: span 1">
+        <div class="label">Net P&amp;L</div>
+        <div class="value pos">+$420.00</div>
+        <div class="hint">After $12.00 of costs</div>
+      </div>
+      <div class="stat neutral">
+        <div class="label">R multiple</div>
+        <div class="value">2.10</div>
+        <div class="hint">From entry, stop and exit</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="eyebrow-app" style="margin-top:4px">Trade</div>
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="field"><label>Symbol</label><div class="input">NAS100</div></div>
+    <div class="field"><label>Direction</label>
+      <div class="seg"><button aria-pressed="true">Long</button><button>Short</button></div>
+    </div>
+    <div class="field"><label>Entry price</label><div class="input">18420.00</div></div>
+    <div class="field"><label>Stop loss</label><div class="input ph">Optional — needed for an R multiple</div></div>
+    <div class="field"><label>Quantity</label><div class="input">1.00</div></div>
+  </div>
+
+  <div class="btn" style="margin-top:18px">Save trade</div>
+  <div class="hint" style="text-align:center">Open trades never count toward realised figures until they close.</div>`;
+
+const settings = () => `
+  <div style="display:flex;align-items:center;gap:5px;color:var(--muted);font-size:13px;font-weight:600">‹ Back</div>
+  <div class="eyebrow-app">Data</div>
+  <h2 class="title">Data &amp; settings</h2>
+  <p class="sub">Accounts, sync and the records stored on this device.</p>
+
+  <div class="card" style="margin-top:16px">
+    <div class="row-between">
+      <div class="card-title">Sync</div>
+      <span class="badge partial">Device only</span>
+    </div>
+    <div class="hint">Supabase is not configured. Everything you record stays in the local database on this phone — it is real and saved, but it does not reach another device.</div>
+    <div class="btn secondary" style="margin-top:12px">How to turn on sync</div>
+  </div>
+
+  <div class="eyebrow-app" style="margin-top:4px">Accounts</div>
+  <div class="card">
+    <div class="row-between">
+      <div>
+        <div style="font-size:14.5px;font-weight:700">Main Account</div>
+        <div class="hint" style="margin-top:3px">USD · $100,000.00 starting balance</div>
+      </div>
+      <span class="badge accent">Reporting</span>
+    </div>
+    <div class="divider" style="margin:12px 0"></div>
+    <div class="row-between">
+      <div>
+        <div style="font-size:14.5px;font-weight:700">Practice</div>
+        <div class="hint" style="margin-top:3px">USD · $10,000.00 starting balance</div>
+      </div>
+    </div>
+    <div class="btn secondary" style="margin-top:14px">Add account</div>
+  </div>
+
+  <div class="eyebrow-app" style="margin-top:4px">Appearance</div>
+  <div class="seg">
+    <button>System</button>
+    <button aria-pressed="true">Dark</button>
+    <button>Light</button>
+  </div>
+
+  <div class="eyebrow-app" style="margin-top:4px">Your records</div>
+  <div class="card">
+    <div class="card-title">Export</div>
+    <div class="hint">A CSV of trades, exits and journal entries, shared through the Android share sheet. Nothing leaves the device unless you choose where it goes.</div>
+    <div class="btn secondary" style="margin-top:12px">Export CSV</div>
+    <div class="btn" style="margin-top:8px;background:var(--loss-soft);color:var(--loss);border-color:var(--loss)">Clear local records</div>
+  </div>
+
+  <div class="footerband">
+    <div class="top"><span class="name">TradeVault</span><span class="cap">Trading journal</span></div>
+    <p>A journal and analysis tool. It does not place trades, connect to a broker, or tell you what
+       will happen next.</p>
+  </div>`;
+
+const render = (label, theme, active, content, showTabs = true) => `
+  <figure>
+    ${chrome(theme, active, content, showTabs)}
+    <figcaption><b>${label}</b>${theme === "light" ? "light theme" : "dark theme"}</figcaption>
+  </figure>`;
+
+document.getElementById("phones").innerHTML = [
+  render("Dashboard", "dark", "dashboard", dashboard()),
+  render("Trades", "dark", "trades", trades()),
+  render("Add trade", "dark", "add", addTrade()),
+  render("Data & settings", "dark", "", settings(), false),
+  render("Dashboard", "light", "dashboard", dashboard()),
+].join("");
+</script>
+</body>
+</html>

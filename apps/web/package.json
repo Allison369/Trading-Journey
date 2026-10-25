@@ -1,0 +1,26 @@
+{
+  "name": "@tradevault/web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TradeVault web app — trading journal and analytics, backed by a shared Supabase database.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "@tradevault/core": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "~5.7.2",
+    "vite": "^5.4.10"
+  }
+}

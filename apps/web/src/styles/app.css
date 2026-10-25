@@ -1,0 +1,1761 @@
+/* ==========================================================================
+   TradeVault — design system
+   ==========================================================================
+   The visual language is a warm, editorial dashboard: an off-white rail down
+   the left, a white canvas, and colour used as large soft blocks rather than
+   as thin accents. The palette below was extracted from a reference design
+   rather than chosen by eye, so the values are exact.
+
+   The four pastels are the signature. Each one is paired with a DEEP ink of
+   the same hue, because text on a pastel has to be dark to be readable and
+   neutral grey would look dirty against coral. So a coral card carries warm
+   brown text (#341109), a blue card carries navy (#081f38), and so on.
+
+   Colour meaning, applied consistently everywhere:
+     profit  -> green     loss   -> red
+     accent  -> violet    warning-> amber
+   Green and red are never used decoratively, so a coloured number always means
+   money. Each also has a text-safe variant that meets WCAG AA on its
+   background.
+
+   Both themes carry the same geometry — spacing, radii, and the pastel
+   blocks — and differ only in palette. The light theme is the reference
+   design; the dark theme is its translation.
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces — warm off-white rail against a white canvas. */
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #fafbf8;
+  --surface-hover: #f3f4ef;
+  --rail: #fafbf8;
+  --border: #e9e9e7;
+  --border-strong: #d6d6d2;
+
+  /* Tinted panels — large quiet blocks that organise the page. */
+  --panel-cool: #f6fafd;
+  --panel-warm: #fff0ec;
+  --panel-cream: #fff7f5;
+  --panel-cool-hover: #eef4fa;
+  --panel-warm-hover: #ffe8e1;
+  --panel-cream-hover: #fff1ee;
+
+  /* Text */
+  --text: #2f2f2f;
+  --text-muted: #64655e;
+  --text-faint: #94958c;
+  --text-inverse: #ffffff;
+
+  /* Signature pastels, with their deep hue-matched inks. */
+  --pastel-coral: #f9b69f;
+  --pastel-coral-ink: #341109;
+  --pastel-yellow: #f7df8f;
+  --pastel-yellow-ink: #2c1900;
+  --pastel-pink: #f6cee0;
+  --pastel-pink-ink: #320d1e;
+  --pastel-blue: #b6d5f4;
+  --pastel-blue-ink: #081f38;
+
+  /* Semantic — money */
+  --profit: #16a34a;
+  --profit-strong: #15803d;
+  --profit-soft: rgba(22, 163, 74, 0.12);
+  --profit-text: #15803d;
+
+  --loss: #dc2626;
+  --loss-strong: #b91c1c;
+  --loss-soft: rgba(220, 38, 38, 0.1);
+  --loss-text: #b91c1c;
+
+  --breakeven: #8a8b83;
+  --breakeven-soft: rgba(138, 139, 131, 0.14);
+
+  /* Accents */
+  --accent: #6d28d9;
+  --accent-strong: #5b21b6;
+  --accent-soft: rgba(109, 40, 217, 0.1);
+  --accent-text: #5b21b6;
+
+  --info: #2563eb;
+  --info-soft: rgba(37, 99, 235, 0.1);
+
+  --warning: #b45309;
+  --warning-soft: rgba(180, 83, 9, 0.12);
+  --warning-text: #92400e;
+
+  /* Chart ramp */
+  --chart-1: #6d28d9;
+  --chart-2: #16a34a;
+  --chart-3: #2563eb;
+  --chart-4: #b45309;
+  --chart-5: #db2777;
+  --chart-6: #0891b2;
+  --chart-grid: #eeeeea;
+
+  /* Near-black blocks, used sparingly and with intent. */
+  --ink-block: #141412;
+
+  /* Footer bar — a full-width dark band at the foot of every page. */
+  --footer-bg: #2f2f2f;
+  --footer-text: #ececea;
+  --footer-muted: #a5a59e;
+  --footer-rule: rgba(255, 255, 255, 0.14);
+
+  /* Primary button — the near-black block. */
+  --btn-primary-bg: #141412;
+  --btn-primary-bg-hover: #2f2f2f;
+  --btn-primary-text: #ffffff;
+
+  /* Semantic chip colours. These sit ON a pastel block, so they are darker
+     than the body profit/loss colours to stay legible against a light tint. */
+  --chip-pos: #0f5132;
+  --chip-neg: #7f1d1d;
+
+  --shadow-sm: 0 1px 2px rgba(47, 47, 47, 0.05);
+  --shadow: 0 4px 16px rgba(47, 47, 47, 0.07);
+  --shadow-lg: 0 16px 44px rgba(47, 47, 47, 0.13);
+
+  --focus-ring: 0 0 0 3px rgba(20, 20, 18, 0.28);
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* The same design, translated: warm off-black instead of warm off-white. */
+  --bg: #131313;
+  --bg-elevated: #1b1b1a;
+  --surface: #1b1b1a;
+  --surface-2: #222221;
+  --surface-hover: #2b2b29;
+  --rail: #101010;
+  --border: #2e2e2c;
+  --border-strong: #3d3d3a;
+
+  /* Tinted panels keep their hue but drop to a dark, quiet version. */
+  --panel-cool: #16202b;
+  --panel-warm: #2a1f1c;
+  --panel-cream: #241d1b;
+  --panel-cool-hover: #1b2836;
+  --panel-warm-hover: #332622;
+  --panel-cream-hover: #2c2320;
+
+  --text: #f2f1ec;
+  --text-muted: #a3a29a;
+  --text-faint: #77766f;
+  --text-inverse: #131313;
+
+  /* Pastels become deep, desaturated blocks. The ink inverts with them. */
+  --pastel-coral: #3d2a22;
+  --pastel-coral-ink: #f9b69f;
+  --pastel-yellow: #3a3220;
+  --pastel-yellow-ink: #f7df8f;
+  --pastel-pink: #3a2530;
+  --pastel-pink-ink: #f6cee0;
+  --pastel-blue: #1f2c3c;
+  --pastel-blue-ink: #b6d5f4;
+
+  --profit: #22c55e;
+  --profit-strong: #16a34a;
+  --profit-soft: rgba(34, 197, 94, 0.16);
+  --profit-text: #4ade80;
+
+  --loss: #ef4444;
+  --loss-strong: #dc2626;
+  --loss-soft: rgba(239, 68, 68, 0.16);
+  --loss-text: #f87171;
+
+  --breakeven: #8f8f88;
+  --breakeven-soft: rgba(143, 143, 136, 0.16);
+
+  --accent: #a78bfa;
+  --accent-strong: #8b5cf6;
+  --accent-soft: rgba(167, 139, 250, 0.16);
+  --accent-text: #c4b5fd;
+
+  --info: #60a5fa;
+  --info-soft: rgba(96, 165, 250, 0.16);
+
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.16);
+  --warning-text: #fcd34d;
+
+  --chart-1: #a78bfa;
+  --chart-2: #22c55e;
+  --chart-3: #60a5fa;
+  --chart-4: #fbbf24;
+  --chart-5: #f472b6;
+  --chart-6: #22d3ee;
+  --chart-grid: #2e2e2c;
+
+  --ink-block: #f2f1ec;
+
+  --footer-bg: #1c1c1b;
+  --footer-text: #ececea;
+  --footer-muted: #8d8d86;
+  --footer-rule: rgba(255, 255, 255, 0.12);
+
+  /* In dark mode the primary button inverts to a light block, which keeps the
+     same "one solid slab" reading without a black hole in a dark page. */
+  --btn-primary-bg: #f2f1ec;
+  --btn-primary-bg-hover: #dcdbd4;
+  --btn-primary-text: #131313;
+
+  /* On a dark pastel block the chip inverts to the bright body colours. */
+  --chip-pos: #4ade80;
+  --chip-neg: #f87171;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.6);
+
+  --focus-ring: 0 0 0 3px rgba(242, 241, 236, 0.4);
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Reset
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent-text); }
+
+/* Tabular figures for every number. Digits that do not shift width make a
+   column of P&L values readable at a glance. */
+.num,
+td.num,
+.stat-value,
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.mono {
+  font-family: "JetBrains Mono", "SF Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* Visible keyboard focus, everywhere. */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: 12px; }
+
+/* --------------------------------------------------------------------------
+   App shell
+   -------------------------------------------------------------------------- */
+
+.app {
+  display: grid;
+  grid-template-columns: 252px 1fr;
+  min-height: 100%;
+}
+
+/* The rail is a warm off-white, not a grey slab: it reads as paper beside the
+   white canvas rather than as a piece of chrome. */
+.sidebar {
+  background: var(--rail);
+  border-right: 1px solid var(--border);
+  padding: 26px 16px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 2px 8px 26px;
+}
+
+/* The mark carries its own ink tile and cream glyph; see BrandMark.tsx. */
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.brand-sub {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 550;
+  font-size: 14px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.nav-item:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+/* The active item is a white pill with a small ink marker down its edge. */
+.nav-item[aria-current="page"] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 620;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.nav-item[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ink-block);
+}
+
+.nav-icon { flex-shrink: 0; opacity: 0.9; }
+
+.nav-section {
+  padding: 18px 12px 7px;
+  font-size: 10.5px;
+  font-weight: 680;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The header is a display heading, not a toolbar: large type, generous air
+   above it, and no rule cutting it off from the page. */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 38px 40px 22px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 720;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+}
+
+.page-sub {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  max-width: 62ch;
+  line-height: 1.5;
+}
+
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.content {
+  padding: 4px 40px 56px;
+  max-width: 1460px;
+  width: 100%;
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Page footer — a full-width dark band, the way the reference closes a page
+   -------------------------------------------------------------------------- */
+
+.app-footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  margin-top: 40px;
+  padding: 30px 40px 34px;
+}
+
+.app-footer-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  max-width: 1460px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.app-footer-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.app-footer-text {
+  font-size: 12.5px;
+  color: var(--footer-muted);
+  margin-top: 6px;
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.app-footer-links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.app-footer-links button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--footer-muted);
+  font-size: 12.5px;
+  font-weight: 550;
+  transition: color 0.12s ease;
+}
+
+.app-footer-links button:hover { color: var(--footer-text); }
+
+/* Mobile: the sidebar becomes a bottom bar. The app is mobile-first, and the
+   web build keeps that shape. */
+.bottom-nav { display: none; }
+.mobile-only { display: none; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .mobile-only { display: inline-flex; }
+
+  .content { padding: 4px 14px 110px; }
+  .topbar { padding: 20px 14px 16px; }
+  .page-title { font-size: 24px; }
+  .page-sub { font-size: 12.5px; }
+  .app-footer { padding: 24px 14px 28px; }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    justify-content: space-around;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 2px;
+    border-radius: var(--radius-sm);
+    color: var(--text-faint);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .bottom-nav-item[aria-current="page"] { color: var(--accent-text); }
+}
+
+/* --------------------------------------------------------------------------
+   Surfaces
+   -------------------------------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-head,
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.card-title { font-size: 15px; font-weight: 650; }
+.card-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+
+.grid { display: grid; gap: 18px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 1080px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   Statistics
+   -------------------------------------------------------------------------- */
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 15px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 11.5px;
+  font-weight: 620;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.stat-value.sm { font-size: 19px; }
+.stat-hint { font-size: 11.5px; color: var(--text-faint); }
+
+.pos { color: var(--profit-text); }
+.neg { color: var(--loss-text); }
+.flat { color: var(--breakeven); }
+.accent-text { color: var(--accent-text); }
+
+.stat.emphasis {
+  background: linear-gradient(150deg, var(--surface) 0%, var(--accent-soft) 100%);
+  border-color: rgba(124, 58, 237, 0.25);
+}
+
+/* "N/A" must never look like a value. */
+.na {
+  color: var(--text-faint);
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* --------------------------------------------------------------------------
+   Pastel blocks — the signature of the design
+   --------------------------------------------------------------------------
+   A pastel block carries a DEEP ink of the same hue, never neutral grey: grey
+   text on coral looks dirty, and the deep hue is what makes the block read as
+   one object rather than a coloured box with a label dropped into it.
+
+   Because the ink is the card's own colour, profit and loss cannot be
+   signalled by colouring the number here. They are carried by the sign on the
+   number itself and by a small semantic chip, so the rule that coloured text
+   always means money still holds everywhere in the app.
+   -------------------------------------------------------------------------- */
+
+.pastel {
+  border-radius: var(--radius-lg);
+  padding: 17px 19px 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pastel-coral  { background: var(--pastel-coral);  color: var(--pastel-coral-ink); }
+.pastel-yellow { background: var(--pastel-yellow); color: var(--pastel-yellow-ink); }
+.pastel-pink   { background: var(--pastel-pink);   color: var(--pastel-pink-ink); }
+.pastel-blue   { background: var(--pastel-blue);   color: var(--pastel-blue-ink); }
+
+.pastel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pastel-label {
+  font-size: 11px;
+  font-weight: 680;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.66;
+}
+
+.pastel-value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  overflow-wrap: anywhere;
+}
+
+.pastel-hint {
+  font-size: 11.5px;
+  line-height: 1.5;
+  opacity: 0.68;
+}
+
+.pastel-chip {
+  font-size: 9.5px;
+  font-weight: 720;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.pastel-chip.pos { color: var(--chip-pos); }
+.pastel-chip.neg { color: var(--chip-neg); }
+
+/* --------------------------------------------------------------------------
+   Tinted panels
+   --------------------------------------------------------------------------
+   Large quiet blocks that organise a page. They carry no border: the tint is
+   the separation, which is why the design stays calm in a dense screen.
+   -------------------------------------------------------------------------- */
+
+.panel {
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-cool  { background: var(--panel-cool); }
+.panel-warm  { background: var(--panel-warm); }
+.panel-cream { background: var(--panel-cream); }
+
+.panel-title {
+  font-size: 15px;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+}
+
+.panel-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+/* A dashboard split: a wide panel and a narrower one, side by side. */
+.dash-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .dash-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* A row of readouts inside a tinted panel. */
+.panel-list { display: flex; flex-direction: column; }
+
+.panel-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-row:last-child { border-bottom: none; padding-bottom: 0; }
+.panel-row:first-child { padding-top: 4px; }
+
+.panel-row-label { font-size: 13px; color: var(--text-muted); }
+
+.panel-row-note {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  margin-top: 3px;
+  line-height: 1.45;
+  max-width: 46ch;
+}
+
+.panel-row-value {
+  font-size: 17px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.panel-row-value .na { font-size: 15px; }
+
+/* --------------------------------------------------------------------------
+   Buttons and controls
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
+}
+
+.btn:hover:not(:disabled) { background: var(--surface-hover); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* The primary button is the near-black block from the design, not a saturated
+   accent colour. It reads as the one thing to press on a screen that is
+   otherwise mostly paper. */
+.btn-primary {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn-primary:hover:not(:disabled) { background: var(--btn-primary-bg-hover); border-color: var(--btn-primary-bg-hover); }
+
+.btn-ghost { background: transparent; border-color: transparent; color: var(--text-muted); }
+.btn-ghost:hover:not(:disabled) { background: var(--surface); color: var(--text); }
+
+.btn-danger { background: var(--loss-soft); border-color: var(--loss); color: var(--loss-text); }
+.btn-danger:hover:not(:disabled) { background: var(--loss); color: #fff; }
+
+.btn-sm { padding: 6px 11px; font-size: 12.5px; border-radius: var(--radius-sm); }
+.btn-block { width: 100%; }
+
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+}
+
+.label .req { color: var(--loss-text); }
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 14px;
+  transition: border-color 0.12s ease;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.input[aria-invalid="true"] { border-color: var(--loss); }
+
+.textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+
+.hint { font-size: 11.5px; color: var(--text-faint); }
+.error-text { font-size: 12px; color: var(--loss-text); font-weight: 550; }
+
+.form-grid { display: grid; gap: 14px; }
+.form-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.form-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media (max-width: 720px) {
+  .form-grid.cols-2, .form-grid.cols-3 { grid-template-columns: 1fr; }
+}
+
+.form-section {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.form-section-title {
+  font-size: 12px;
+  font-weight: 680;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent-text);
+  margin-bottom: 12px;
+}
+
+.seg {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 3px;
+  gap: 3px;
+}
+
+.seg button {
+  padding: 7px 14px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  -webkit-overflow-scrolling: touch;
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 720px;
+}
+
+table.data thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  text-align: left;
+  padding: 10px 13px;
+  font-size: 11.5px;
+  font-weight: 660;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+table.data th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+table.data th.sortable:hover { color: var(--text); }
+
+table.data tbody td {
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+table.data tbody tr:last-child td { border-bottom: none; }
+table.data tbody tr:hover { background: var(--surface-2); }
+table.data td.num, table.data th.num { text-align: right; }
+
+/* --------------------------------------------------------------------------
+   Badges and pills
+   -------------------------------------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 660;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge-long { background: var(--profit-soft); color: var(--profit-text); }
+.badge-short { background: var(--loss-soft); color: var(--loss-text); }
+.badge-open { background: var(--info-soft); color: var(--info); }
+.badge-partial { background: var(--warning-soft); color: var(--warning-text); }
+.badge-closed { background: var(--breakeven-soft); color: var(--breakeven); }
+.badge-accent { background: var(--accent-soft); color: var(--accent-text); }
+.badge-sample { background: var(--warning-soft); color: var(--warning-text); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Banners
+   -------------------------------------------------------------------------- */
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 15px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.banner-info { background: var(--info-soft); border-color: rgba(59, 130, 246, 0.3); }
+.banner-warn { background: var(--warning-soft); border-color: rgba(245, 158, 11, 0.35); }
+.banner-danger { background: var(--loss-soft); border-color: rgba(239, 68, 68, 0.35); }
+.banner-accent { background: var(--accent-soft); border-color: rgba(124, 58, 237, 0.3); }
+.banner-title { font-weight: 650; margin-bottom: 2px; }
+.banner-icon { flex-shrink: 0; margin-top: 1px; }
+
+/* --------------------------------------------------------------------------
+   Empty, loading and error states
+   -------------------------------------------------------------------------- */
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 52px 22px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+}
+
+.state-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  color: var(--accent-text);
+}
+
+.state-title { font-size: 16px; font-weight: 650; color: var(--text); }
+.state-body { font-size: 13.5px; max-width: 460px; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Charts
+   -------------------------------------------------------------------------- */
+
+.chart-svg { width: 100%; display: block; overflow: visible; }
+
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 12px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(64px, 132px) 1fr auto;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 0;
+}
+
+.bar-label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-track {
+  position: relative;
+  height: 20px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-sm);
+}
+.bar-fill.pos { background: var(--profit); }
+.bar-fill.neg { background: var(--loss); }
+
+.bar-value { font-size: 12.5px; font-weight: 620; min-width: 78px; text-align: right; }
+
+/* Heatmap */
+.heatmap { display: flex; flex-wrap: wrap; gap: 4px; }
+.heat-cell {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  cursor: default;
+}
+.heat-cell[data-level="0"] { background: var(--surface-2); }
+.heat-cell[data-level="1"] { background: color-mix(in srgb, var(--profit) 28%, var(--surface-2)); }
+.heat-cell[data-level="2"] { background: color-mix(in srgb, var(--profit) 52%, var(--surface-2)); }
+.heat-cell[data-level="3"] { background: color-mix(in srgb, var(--profit) 76%, var(--surface-2)); }
+.heat-cell[data-level="4"] { background: var(--profit); }
+.heat-cell[data-level="-1"] { background: color-mix(in srgb, var(--loss) 30%, var(--surface-2)); }
+.heat-cell[data-level="-2"] { background: color-mix(in srgb, var(--loss) 55%, var(--surface-2)); }
+.heat-cell[data-level="-3"] { background: color-mix(in srgb, var(--loss) 78%, var(--surface-2)); }
+.heat-cell[data-level="-4"] { background: var(--loss); }
+
+/* --------------------------------------------------------------------------
+   Modal
+   -------------------------------------------------------------------------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 780px;
+  padding: 22px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-title { font-size: 17px; font-weight: 680; }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Misc
+   -------------------------------------------------------------------------- */
+
+.row { display: flex; align-items: center; gap: 10px; }
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.wrap { flex-wrap: wrap; }
+.spacer { flex: 1; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.stack-sm { display: flex; flex-direction: column; gap: 8px; }
+
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 7px 16px; font-size: 13.5px; }
+.kv dt { color: var(--text-muted); }
+.kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+.prose { font-size: 14px; line-height: 1.68; color: var(--text-muted); }
+.prose h3 { color: var(--text); margin: 20px 0 8px; font-size: 15px; }
+.prose p { margin: 0 0 10px; }
+.prose ul { margin: 0 0 12px; padding-left: 20px; }
+.prose li { margin-bottom: 5px; }
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 9px 14px;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab[aria-selected="true"] { color: var(--accent-text); border-bottom-color: var(--accent); }
+
+/* --------------------------------------------------------------------------
+   Attachments
+   -------------------------------------------------------------------------- */
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 26px 20px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.dropzone.is-dragging {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.dropzone.is-busy {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.dropzone-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.dropzone-title { font-weight: 640; font-size: 14px; }
+.dropzone-hint { font-size: 12px; color: var(--text-faint); max-width: 420px; }
+
+.attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.attachment-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.attachment-thumb {
+  display: block;
+  width: 100%;
+  height: 120px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+/* `contain`, never `cover`: cropping a chart screenshot could hide the very
+   thing the user attached it to show. */
+.attachment-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.attachment-thumb-failed {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  color: var(--text-faint);
+  cursor: default;
+}
+
+.attachment-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.attachment-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-caption { font-size: 12px; color: var(--text-muted); }
+
+.attachment-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 5px;
+  background: color-mix(in srgb, var(--bg-elevated) 85%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--loss-text);
+}
+
+.lightbox {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 1100px;
+  padding: 18px;
+}
+
+.lightbox-image {
+  width: 100%;
+  /* Capped so a tall screenshot does not run off the screen, contain so it is
+     never cropped into looking like a different chart. */
+  max-height: 76vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: var(--bg);
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Landing / marketing shell
+   -------------------------------------------------------------------------- */
+
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* The colour washes come from the same four pastels the dashboard uses, so
+     the front page and the product read as one thing. */
+  background:
+    radial-gradient(1100px 520px at 10% -10%, color-mix(in srgb, var(--pastel-blue) 40%, transparent), transparent 62%),
+    radial-gradient(900px 460px at 92% 2%, color-mix(in srgb, var(--pastel-yellow) 34%, transparent), transparent 58%),
+    var(--bg);
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 28px;
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.landing-nav .brand { padding: 0; }
+.landing-nav-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.landing-hero {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 44px 28px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 44px;
+  align-items: center;
+}
+
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 660;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.landing-title {
+  font-size: clamp(30px, 4.6vw, 50px);
+  font-weight: 760;
+  letter-spacing: -0.032em;
+  line-height: 1.06;
+  margin-bottom: 16px;
+}
+
+/* The second line wears the deep coral ink — a warm brown in light, a soft
+   coral in dark. One colour, from the same palette as the dashboard blocks,
+   instead of a gradient that tries to be every colour at once. */
+.landing-title .grad {
+  color: var(--pastel-coral-ink);
+}
+
+.landing-lede {
+  font-size: 16.5px;
+  color: var(--text-muted);
+  line-height: 1.62;
+  max-width: 560px;
+  margin-bottom: 24px;
+}
+
+.landing-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.landing-cta .btn { padding: 12px 20px; font-size: 14.5px; }
+
+.landing-disclaimer {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  max-width: 520px;
+  line-height: 1.6;
+  border-left: 2px solid var(--border-strong);
+  padding-left: 12px;
+}
+
+/* The preview panel on the right of the hero. It is a tinted panel, not a
+   white card: the pastel blocks inside it need a quiet ground to sit on. */
+.landing-preview {
+  background: var(--panel-cool);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.landing-pastels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.landing-preview-title { font-size: 13px; font-weight: 650; }
+
+.landing-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-stat {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.landing-stat-label {
+  font-size: 10.5px;
+  font-weight: 640;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.landing-stat-value { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+
+.landing-sections {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 28px 56px;
+}
+
+.landing-sections-title {
+  font-size: 13px;
+  font-weight: 660;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+  margin-bottom: 16px;
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.landing-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.landing-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  margin-bottom: 2px;
+}
+
+/* The feature icons cycle the same four pastels the dashboard blocks use. */
+.landing-card-icon.tone-coral  { background: var(--pastel-coral);  color: var(--pastel-coral-ink); }
+.landing-card-icon.tone-yellow { background: var(--pastel-yellow); color: var(--pastel-yellow-ink); }
+.landing-card-icon.tone-pink   { background: var(--pastel-pink);   color: var(--pastel-pink-ink); }
+.landing-card-icon.tone-blue   { background: var(--pastel-blue);   color: var(--pastel-blue-ink); }
+
+.landing-card-title { font-size: 14.5px; font-weight: 660; }
+.landing-card-body { font-size: 13px; color: var(--text-muted); line-height: 1.58; }
+
+/* The front page closes on the same dark band the app uses. */
+.landing-foot {
+  margin-top: auto;
+  background: var(--footer-bg);
+  color: var(--footer-muted);
+  padding: 22px 28px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.landing-foot .btn-ghost { color: var(--footer-text); }
+.landing-foot .btn-ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); color: var(--footer-text); }
+
+@media (max-width: 900px) {
+  .landing-hero { grid-template-columns: 1fr; gap: 30px; padding: 26px 18px 20px; }
+  .landing-nav { padding: 14px 18px; }
+  .landing-sections { padding: 22px 18px 44px; }
+  .landing-lede { font-size: 15.5px; }
+}
+
+/* --------------------------------------------------------------------------
+   Auth — sign in / sign up
+   -------------------------------------------------------------------------- */
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px 18px;
+  background:
+    radial-gradient(940px 460px at 16% -10%, color-mix(in srgb, var(--pastel-blue) 36%, transparent), transparent 60%),
+    radial-gradient(760px 400px at 86% 6%, color-mix(in srgb, var(--pastel-coral) 32%, transparent), transparent 56%),
+    var(--bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.auth-switch button {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 620;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.auth-switch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.auth-footnote {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--text-faint);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Admin
+   -------------------------------------------------------------------------- */
+
+.admin-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--panel-cream);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* The near-black block, used once per screen so the notice reads as a mark
+   rather than as another coloured panel. */
+.admin-banner-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--ink-block);
+  color: var(--text-inverse);
+}
+
+.admin-scope {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 82ch;
+}
+
+.admin-scope ul { margin: 0; padding-left: 20px; }
+.admin-scope li { margin-bottom: 6px; }
+.admin-scope p { margin-top: 2px; }
+.admin-scope code {
+  background: rgba(47, 47, 47, 0.06);
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+
+[data-theme="dark"] .admin-scope code { background: rgba(255, 255, 255, 0.08); }
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--pastel-blue);
+  color: var(--pastel-blue-ink);
+  flex-shrink: 0;
+}
+
+/* An admin is marked with the ink block rather than a brighter colour: the
+   role is a fact about the row, not a warning. */
+.avatar.is-admin {
+  background: var(--ink-block);
+  color: var(--text-inverse);
+}

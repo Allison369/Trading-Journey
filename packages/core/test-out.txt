@@ -1,0 +1,282 @@
+npm notice run tradevault@1.0.0 npx
+npm notice run jest --verbose
+FAIL src/domain/decimal.test.ts
+  decimal helpers
+    √ parses decimal strings and numbers (15 ms)
+    √ avoids binary floating point drift on addition (2 ms)
+    √ sums large lists without drift (3 ms)
+    √ ignores null and undefined entries when summing (1 ms)
+    √ multiplies exactly (1 ms)
+    √ subtracts exactly (1 ms)
+    √ round-trips through the scaled representation (1 ms)
+    √ rejects non-finite values when scaling (26 ms)
+    × rounds half away from zero at the given precision (5 ms)
+    √ returns null from safeDivide on zero or invalid denominators (2 ms)
+
+  ● decimal helpers › rounds half away from zero at the given precision
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1.01
+    Received: 1
+
+    [0m [90m 62 |[39m
+     [90m 63 |[39m   it([32m"rounds half away from zero at the given precision"[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 64 |[39m     expect(round([35m1.005[39m[33m,[39m [35m2[39m))[33m.[39mtoBe([35m1.01[39m)[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 65 |[39m     expect(round([33m-[39m[35m1.005[39m[33m,[39m [35m2[39m))[33m.[39mtoBe([33m-[39m[35m1.01[39m)[33m;[39m
+     [90m 66 |[39m     expect(round([35m2.5[39m[33m,[39m [35m0[39m))[33m.[39mtoBe([35m3[39m)[33m;[39m
+     [90m 67 |[39m     expect(round([33m-[39m[35m2.5[39m[33m,[39m [35m0[39m))[33m.[39mtoBe([33m-[39m[35m3[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (src/domain/decimal.test.ts:64:29)
+
+FAIL src/domain/pnl.test.ts
+  priceDelta
+    √ is positive for a favourable long move (19 ms)
+    √ is negative for an adverse long move (1 ms)
+    √ is positive for a favourable short move (5 ms)
+    √ is negative for an adverse short move
+  grossPnlForLeg
+    √ computes a long winner (1 ms)
+    √ computes a short winner (1 ms)
+    √ computes a long loser
+    √ computes a short loser (2 ms)
+    √ applies a contract multiplier for futures-style instruments (1 ms)
+    √ applies a forex-style multiplier (1 ms)
+    √ handles fractional quantities without drift (1 ms)
+  computeTrade — basic long and short
+    × computes a simple long winner before costs (7 ms)
+    × computes a simple short winner (2 ms)
+    × computes a short loser (1 ms)
+  computeTrade — fees and commissions
+    × subtracts entry and exit fees from net but leaves gross intact (1 ms)
+    × includes funding fees and slippage (1 ms)
+    √ turns a small winner into a loser once fees are applied (1 ms)
+    √ aggregates per-exit fees into the exit fee bucket (1 ms)
+  computeTrade — partial exits
+    √ prices each leg at its own exit price (1 ms)
+    √ reports open quantity while partially closed
+    √ computes a weighted average exit price
+    √ does not treat unrealised profit as realised (1 ms)
+    √ ignores soft-deleted exits (1 ms)
+  computeTrade — R-multiple
+    × computes R from net P&L and initial risk
+    × returns a negative R for a loss
+    × handles a short trade risk correctly (1 ms)
+    √ returns null R when the stop loss is missing (1 ms)
+    √ returns null R when the stop loss equals the entry price
+    √ withholds R until the trade is fully closed (1 ms)
+  computeTrade — planned reward/risk
+    √ computes planned R:R from take profit and stop loss (1 ms)
+    √ returns null when either level is missing
+  computeTrade — holding duration
+    × measures duration in milliseconds (1 ms)
+    √ returns null for an open trade
+  computeTrade — manual override
+    × honours manualNetPnl for effective value while keeping the computed one
+  computeTrade — edge cases
+    √ handles a zero-quantity trade without NaN (2 ms)
+    √ handles a missing exit price without NaN
+    √ handles a missing entry price
+    × treats a missing contract multiplier as 1 (1 ms)
+  validateExits
+    √ accepts exits that sum to the opened quantity (1 ms)
+    √ rejects over-closing the position (1 ms)
+    √ rejects a non-positive exit quantity (1 ms)
+    √ requires an exit price
+    √ ignores soft-deleted exits when checking totals (1 ms)
+  exitsMap helper
+    √ groups exits by their trade id (1 ms)
+
+  ● computeTrade — basic long and short › computes a simple long winner before costs
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 10
+
+    [0m [90m 72 |[39m     )[33m;[39m
+     [90m 73 |[39m     [36mconst[39m c [33m=[39m computeTrade(trade[33m,[39m [exit])[33m;[39m
+    [31m[1m>[22m[39m[90m 74 |[39m     expect(c[33m.[39mgrossPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m    |[39m                        [31m[1m^[22m[39m
+     [90m 75 |[39m     expect(c[33m.[39mnetPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m 76 |[39m     expect(c[33m.[39misFullyClosed)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 77 |[39m     expect(c[33m.[39mopenQuantity)[33m.[39mtoBe([35m0[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:74:24)
+
+  ● computeTrade — basic long and short › computes a simple short winner
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 10
+
+    [0m [90m 83 |[39m       { price[33m:[39m [32m"90"[39m }
+     [90m 84 |[39m     )[33m;[39m
+    [31m[1m>[22m[39m[90m 85 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mnetPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m    |[39m                                                [31m[1m^[22m[39m
+     [90m 86 |[39m   })[33m;[39m
+     [90m 87 |[39m
+     [90m 88 |[39m   it([32m"computes a short loser"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:85:48)
+
+  ● computeTrade — basic long and short › computes a short loser
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: -40
+    Received: -4
+
+    [0m [90m 91 |[39m       { price[33m:[39m [32m"104"[39m }
+     [90m 92 |[39m     )[33m;[39m
+    [31m[1m>[22m[39m[90m 93 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mnetPnl)[33m.[39mtoBe([33m-[39m[35m40[39m)[33m;[39m
+     [90m    |[39m                                                [31m[1m^[22m[39m
+     [90m 94 |[39m   })[33m;[39m
+     [90m 95 |[39m })[33m;[39m
+     [90m 96 |[39m[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:93:48)
+
+  ● computeTrade — fees and commissions › subtracts entry and exit fees from net but leaves gross intact
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 10
+
+    [0m [90m 102 |[39m     )[33m;[39m
+     [90m 103 |[39m     [36mconst[39m c [33m=[39m computeTrade(trade[33m,[39m [exit])[33m;[39m
+    [31m[1m>[22m[39m[90m 104 |[39m     expect(c[33m.[39mgrossPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 105 |[39m     expect(c[33m.[39mcosts[33m.[39mtotal)[33m.[39mtoBe([35m12[39m)[33m;[39m [90m// 5 + 5 + 2[39m
+     [90m 106 |[39m     expect(c[33m.[39mnetPnl)[33m.[39mtoBe([35m88[39m)[33m;[39m
+     [90m 107 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:104:24)
+
+  ● computeTrade — fees and commissions › includes funding fees and slippage
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 95.5
+    Received: 5.5
+
+    [0m [90m 115 |[39m     expect(c[33m.[39mcosts[33m.[39mfundingFees)[33m.[39mtoBe([35m3[39m)[33m;[39m
+     [90m 116 |[39m     expect(c[33m.[39mcosts[33m.[39mslippage)[33m.[39mtoBe([35m1.5[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 117 |[39m     expect(c[33m.[39mnetPnl)[33m.[39mtoBe([35m95.5[39m)[33m;[39m
+     [90m     |[39m                      [31m[1m^[22m[39m
+     [90m 118 |[39m   })[33m;[39m
+     [90m 119 |[39m
+     [90m 120 |[39m   it([32m"turns a small winner into a loser once fees are applied"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:117:22)
+
+  ● computeTrade — R-multiple › computes R from net P&L and initial risk
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: null
+
+    [0m [90m 205 |[39m     [36mconst[39m c [33m=[39m computeTrade(trade[33m,[39m [exit])[33m;[39m
+     [90m 206 |[39m     expect(c[33m.[39minitialRisk)[33m.[39mtoBe([35m50[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 207 |[39m     expect(c[33m.[39mrMultiple)[33m.[39mtoBe([35m2[39m)[33m;[39m
+     [90m     |[39m                         [31m[1m^[22m[39m
+     [90m 208 |[39m   })[33m;[39m
+     [90m 209 |[39m
+     [90m 210 |[39m   it([32m"returns a negative R for a loss"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:207:25)
+
+  ● computeTrade — R-multiple › returns a negative R for a loss
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: -0.5
+    Received: null
+
+    [0m [90m 214 |[39m     )[33m;[39m
+     [90m 215 |[39m     [90m// risk 50, loss -25 -> R = -0.5[39m
+    [31m[1m>[22m[39m[90m 216 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mrMultiple)[33m.[39mtoBe([33m-[39m[35m0.5[39m)[33m;[39m
+     [90m     |[39m                                                   [31m[1m^[22m[39m
+     [90m 217 |[39m   })[33m;[39m
+     [90m 218 |[39m
+     [90m 219 |[39m   it([32m"handles a short trade risk correctly"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:216:51)
+
+  ● computeTrade — R-multiple › handles a short trade risk correctly
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: null
+
+    [0m [90m 223 |[39m     )[33m;[39m
+     [90m 224 |[39m     [90m// risk 5 x 10 = 50; profit 100 -> R = 2[39m
+    [31m[1m>[22m[39m[90m 225 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mrMultiple)[33m.[39mtoBe([35m2[39m)[33m;[39m
+     [90m     |[39m                                                   [31m[1m^[22m[39m
+     [90m 226 |[39m   })[33m;[39m
+     [90m 227 |[39m
+     [90m 228 |[39m   it([32m"returns null R when the stop loss is missing"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:225:51)
+
+  ● computeTrade — holding duration › measures duration in milliseconds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 9000000
+    Received: 7200000
+
+    [0m [90m 274 |[39m       { exitedAt[33m:[39m [32m"2026-01-01T12:30:00.000Z"[39m }
+     [90m 275 |[39m     )[33m;[39m
+    [31m[1m>[22m[39m[90m 276 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mholdingMs)[33m.[39mtoBe([35m2.5[39m [33m*[39m [35m60[39m [33m*[39m [35m60[39m [33m*[39m [35m1000[39m)[33m;[39m
+     [90m     |[39m                                                   [31m[1m^[22m[39m
+     [90m 277 |[39m   })[33m;[39m
+     [90m 278 |[39m
+     [90m 279 |[39m   it([32m"returns null for an open trade"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:276:51)
+
+  ● computeTrade — manual override › honours manualNetPnl for effective value while keeping the computed one
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 10
+
+    [0m [90m 290 |[39m     )[33m;[39m
+     [90m 291 |[39m     [36mconst[39m c [33m=[39m computeTrade(trade[33m,[39m [exit])[33m;[39m
+    [31m[1m>[22m[39m[90m 292 |[39m     expect(c[33m.[39mnetPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m     |[39m                      [31m[1m^[22m[39m
+     [90m 293 |[39m     expect(c[33m.[39mmanualNetPnl)[33m.[39mtoBe([35m999[39m)[33m;[39m
+     [90m 294 |[39m     expect(c[33m.[39meffectiveNetPnl)[33m.[39mtoBe([35m999[39m)[33m;[39m
+     [90m 295 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:292:22)
+
+  ● computeTrade — edge cases › treats a missing contract multiplier as 1
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 10
+
+    [0m [90m 321 |[39m       { price[33m:[39m [32m"110"[39m }
+     [90m 322 |[39m     )[33m;[39m
+    [31m[1m>[22m[39m[90m 323 |[39m     expect(computeTrade(trade[33m,[39m [exit])[33m.[39mnetPnl)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m     |[39m                                                [31m[1m^[22m[39m
+     [90m 324 |[39m   })[33m;[39m
+     [90m 325 |[39m })[33m;[39m
+     [90m 326 |[39m[0m
+
+      at Object.<anonymous> (src/domain/pnl.test.ts:323:48)
+
+Test Suites: 2 failed, 2 total
+Tests:       12 failed, 42 passed, 54 total
+Snapshots:   0 total
+Time:        5.656 s
+Ran all test suites.

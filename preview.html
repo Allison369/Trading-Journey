@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TradeVault — design preview</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --shell: #17171a;
+        --shell-2: #202027;
+        --shell-line: #2e2e37;
+        --shell-text: #e9e9ef;
+        --shell-muted: #9b9ba8;
+      }
+
+      * { box-sizing: border-box; }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--shell);
+        color: var(--shell-text);
+        font:
+          14px/1.5 ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        background: var(--shell-2);
+        border-bottom: 1px solid var(--shell-line);
+      }
+
+      .bar h1 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        margin: 0 14px 0 0;
+      }
+
+      .bar h1 span { color: var(--shell-muted); font-weight: 500; }
+
+      button {
+        font: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--shell-line);
+        background: #2a2a33;
+        color: var(--shell-text);
+        cursor: pointer;
+      }
+
+      button[aria-pressed="true"] {
+        background: #f2f1ec;
+        border-color: #f2f1ec;
+        color: #17171a;
+      }
+
+      button:hover:not([aria-pressed="true"]) { border-color: #45454f; }
+
+      .note {
+        margin-left: auto;
+        font-size: 11.5px;
+        color: var(--shell-muted);
+      }
+
+      .stage {
+        padding: 18px;
+        overflow: auto;
+        height: calc(100% - 53px);
+      }
+
+      /* The frame is a real 1512px-wide viewport, scaled to fit the pane. The
+         app inside sees a genuine desktop width, so what is shown is the real
+         layout rather than a narrow responsive fallback. */
+      .scaler {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      iframe {
+        width: 1512px;
+        height: 1009px;
+        border: 0;
+        display: block;
+        transform-origin: top left;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+      }
+
+      .caption {
+        margin: 14px 2px 0;
+        font-size: 12px;
+        color: var(--shell-muted);
+      }
+
+      .caption strong { color: var(--shell-text); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <h1>TradeVault <span>— live design preview</span></h1>
+
+      <button data-src="http://localhost:4173/" data-note="The app dashboard, running on the browser-local sample set. This is the layout that follows the reference: four tinted headline blocks, a wide cool panel beside a narrower warm one, then the detail cards." aria-pressed="true">Dashboard</button>
+      <button data-src="http://localhost:4174/" data-note="The front page. The four headline figures are computed at render by @tradevault/core from a labelled sample set and are captioned “Sample data” in the panel itself. Click “Create account” inside it to reach the sign-up card." aria-pressed="false">Front page</button>
+      <button data-src="admin-preview.html" data-note="The super-admin users overview. This one is a static layout preview: its rows are placeholders, because the live page only renders for an admin session against the shared database. It wears the same four pastel totals, cool table panel and warm “what this page cannot do” panel as the dashboard." aria-pressed="false">Admin</button>
+
+      <span class="note">The first two are live local builds — click through them. Admin is a static layout preview.</span>
+    </div>
+
+    <div class="stage">
+      <div class="scaler"><iframe id="app" src="http://localhost:4173/" title="TradeVault preview"></iframe></div>
+      <p class="caption" id="note"></p>
+    </div>
+
+    <script>
+      const frame = document.getElementById("app");
+      const scaler = document.querySelector(".scaler");
+      const note = document.getElementById("note");
+      const buttons = [...document.querySelectorAll("button[data-src]")];
+
+      function fit() {
+        const available = scaler.clientWidth;
+        const scale = Math.min(1, available / 1512);
+        frame.style.transform = `scale(${scale})`;
+        // Reserve the scaled height so the page does not grow a scrollbar.
+        scaler.style.height = `${Math.round(1009 * scale) + 18}px`;
+      }
+
+      function select(btn) {
+        for (const b of buttons) b.setAttribute("aria-pressed", String(b === btn));
+        note.innerHTML = "<strong>" + btn.textContent + "</strong> — " + btn.dataset.note;
+        frame.src = btn.dataset.src;
+      }
+
+      for (const btn of buttons) btn.addEventListener("click", () => select(btn));
+
+      window.addEventListener("resize", fit);
+      fit();
+      select(buttons[0]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "tradevault",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TradeVault — trading journal and analytics. Shared core + web app + mobile app.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspace @tradevault/core",
+    "test:watch": "npm run test:watch --workspace @tradevault/core",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "web": "npm run dev --workspace @tradevault/web",
+    "mobile": "npm run start --workspace @tradevault/mobile",
+    "db:setup": "node scripts/print-sql.mjs"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true
+  }
+}

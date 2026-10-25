@@ -1,0 +1,217 @@
+npm notice run tradevault@1.0.0 npx
+npm notice run jest src/lib/csv.test.ts --verbose
+FAIL src/lib/csv.test.ts
+  detectDelimiter
+    √ detects a comma (4 ms)
+    √ detects a semicolon (1 ms)
+    √ detects a tab (1 ms)
+    √ defaults to comma for a single column (1 ms)
+  parseCsv
+    √ parses a simple table (3 ms)
+    √ handles quoted fields containing the delimiter
+    √ handles escaped quotes inside quoted fields (1 ms)
+    √ handles newlines inside quoted fields (1 ms)
+    √ handles CRLF line endings (1 ms)
+    √ strips a UTF-8 BOM
+    √ skips entirely blank lines
+    √ pads short rows and reports them as malformed (1 ms)
+    √ returns empty structures for empty input (1 ms)
+    × accepts an explicit delimiter override (6 ms)
+  parseNumber
+    √ parses plain numbers (1 ms)
+    √ parses accounting-style negatives in parentheses
+    √ parses thousands separators (1 ms)
+    √ parses European decimal commas
+    √ treats a trailing one/two-digit comma group as decimals
+    √ strips currency symbols and spaces (1 ms)
+    × returns null for empty or non-numeric text (1 ms)
+    × rejects Infinity
+  parseDateTime
+    √ parses ISO strings (1 ms)
+    √ parses day-first dates
+    × parses month-first dates when the day is unambiguous (3 ms)
+    × parses Unix timestamps in seconds and milliseconds (1 ms)
+    √ returns null for unparseable values (1 ms)
+    × keeps a full date-time with seconds
+  detectAdapter and suggestMapping
+    √ maps common broker headers onto fields (1 ms)
+    √ leaves unknown headers unmapped (1 ms)
+    √ falls back to the generic adapter
+    × is tolerant of case, spaces, underscores and dashes (1 ms)
+  fingerprintOf
+    √ is stable for the same logical trade
+    √ differs when the entry price differs (1 ms)
+  buildPreview
+    × flags rows with invalid numbers (1 ms)
+    √ normalises buy/sell into long/short (1 ms)
+    √ detects duplicates within the file
+    √ detects duplicates against existing journal records (1 ms)
+    √ reports missing required fields (1 ms)
+    √ assumes long and warns when no direction column is mapped
+  candidatesToTrades
+    √ converts valid rows into trade inputs with parsed numbers and dates
+    √ marks a row without an exit price as open
+    × excludes rows with errors (1 ms)
+
+  ● parseCsv › accepts an explicit delimiter override
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "a;b",
+    +   "1;2",
+      ]
+
+    [0m [90m 83 |[39m   it([32m"accepts an explicit delimiter override"[39m[33m,[39m () [33m=>[39m {
+     [90m 84 |[39m     [36mconst[39m result [33m=[39m parseCsv([32m"a;b\n1;2"[39m[33m,[39m [32m","[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 85 |[39m     expect(result[33m.[39mrows[[35m0[39m])[33m.[39mtoEqual([[32m"a;b"[39m])[33m;[39m
+     [90m    |[39m                            [31m[1m^[22m[39m
+     [90m 86 |[39m   })[33m;[39m
+     [90m 87 |[39m })[33m;[39m
+     [90m 88 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:85:28)
+
+  ● parseNumber › returns null for empty or non-numeric text
+
+    expect(received).toBeNull()
+
+    Received: 0
+
+    [0m [90m 120 |[39m   it([32m"returns null for empty or non-numeric text"[39m[33m,[39m () [33m=>[39m {
+     [90m 121 |[39m     expect(parseNumber([32m""[39m))[33m.[39mtoBeNull()[33m;[39m
+    [31m[1m>[22m[39m[90m 122 |[39m     expect(parseNumber([32m"abc"[39m))[33m.[39mtoBeNull()[33m;[39m
+     [90m     |[39m                                [31m[1m^[22m[39m
+     [90m 123 |[39m     expect(parseNumber([32m"   "[39m))[33m.[39mtoBeNull()[33m;[39m
+     [90m 124 |[39m   })[33m;[39m
+     [90m 125 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:122:32)
+
+  ● parseNumber › rejects Infinity
+
+    expect(received).toBeNull()
+
+    Received: 0
+
+    [0m [90m 125 |[39m
+     [90m 126 |[39m   it([32m"rejects Infinity"[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 127 |[39m     expect(parseNumber([32m"Infinity"[39m))[33m.[39mtoBeNull()[33m;[39m
+     [90m     |[39m                                     [31m[1m^[22m[39m
+     [90m 128 |[39m   })[33m;[39m
+     [90m 129 |[39m })[33m;[39m
+     [90m 130 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:127:37)
+
+  ● parseDateTime › parses month-first dates when the day is unambiguous
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-03-25T00:00:00.000Z"
+    Received: "2028-01-03T00:00:00.000Z"
+
+    [0m [90m 140 |[39m
+     [90m 141 |[39m   it([32m"parses month-first dates when the day is unambiguous"[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 142 |[39m     expect(parseDateTime([32m"03/25/2026"[39m))[33m.[39mtoBe([32m"2026-03-25T00:00:00.000Z"[39m)[33m;[39m
+     [90m     |[39m                                         [31m[1m^[22m[39m
+     [90m 143 |[39m   })[33m;[39m
+     [90m 144 |[39m
+     [90m 145 |[39m   it([32m"parses Unix timestamps in seconds and milliseconds"[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:142:41)
+
+  ● parseDateTime › parses Unix timestamps in seconds and milliseconds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-03-04T09:31:00.000Z"
+    Received: "2026-03-04T08:51:00.000Z"
+
+    [0m [90m 144 |[39m
+     [90m 145 |[39m   it([32m"parses Unix timestamps in seconds and milliseconds"[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 146 |[39m     expect(parseDateTime([32m"1772614260"[39m))[33m.[39mtoBe([32m"2026-03-04T09:31:00.000Z"[39m)[33m;[39m
+     [90m     |[39m                                         [31m[1m^[22m[39m
+     [90m 147 |[39m     expect(parseDateTime([32m"1772614260000"[39m))[33m.[39mtoBe([32m"2026-03-04T09:31:00.000Z"[39m)[33m;[39m
+     [90m 148 |[39m   })[33m;[39m
+     [90m 149 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:146:41)
+
+  ● parseDateTime › keeps a full date-time with seconds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-03-04T09:31:45.000Z"
+    Received: "2026-03-04T06:31:45.000Z"
+
+    [0m [90m 154 |[39m
+     [90m 155 |[39m   it([32m"keeps a full date-time with seconds"[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 156 |[39m     expect(parseDateTime([32m"2026-03-04 09:31:45"[39m))[33m.[39mtoBe([32m"2026-03-04T09:31:45.000Z"[39m)[33m;[39m
+     [90m     |[39m                                                  [31m[1m^[22m[39m
+     [90m 157 |[39m   })[33m;[39m
+     [90m 158 |[39m })[33m;[39m
+     [90m 159 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:156:50)
+
+  ● detectAdapter and suggestMapping › is tolerant of case, spaces, underscores and dashes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "entryPrice"
+    Received: null
+
+    [0m [90m 183 |[39m     expect(mapping[[32m"ENTRY_PRICE"[39m])[33m.[39mtoBe([32m"entryPrice"[39m)[33m;[39m
+     [90m 184 |[39m     expect(mapping[[32m"entry-price"[39m])[33m.[39mtoBe([32m"entryPrice"[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 185 |[39m     expect(mapping[[32m"Entry  Price"[39m])[33m.[39mtoBe([32m"entryPrice"[39m)[33m;[39m
+     [90m     |[39m                                     [31m[1m^[22m[39m
+     [90m 186 |[39m   })[33m;[39m
+     [90m 187 |[39m })[33m;[39m
+     [90m 188 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:185:37)
+
+  ● buildPreview › flags rows with invalid numbers
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+    [0m [90m 225 |[39m     [36mconst[39m preview [33m=[39m buildPreview(parsed[33m,[39m suggestMapping(parsed[33m.[39mheaders))[33m;[39m
+     [90m 226 |[39m     expect(preview[33m.[39mtotalRows)[33m.[39mtoBe([35m3[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 227 |[39m     expect(preview[33m.[39mvalidRows)[33m.[39mtoBe([35m2[39m)[33m;[39m
+     [90m     |[39m                               [31m[1m^[22m[39m
+     [90m 228 |[39m     expect(preview[33m.[39merrorRows)[33m.[39mtoBe([35m1[39m)[33m;[39m
+     [90m 229 |[39m     expect(preview[33m.[39mcandidates[[35m2[39m][33m?[39m[33m.[39merrors[33m.[39msome((e) [33m=>[39m [35m/not a valid number/[39m[33m.[39mtest(e)))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 230 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:227:31)
+
+  ● candidatesToTrades › excludes rows with errors
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 0
+    Received length: 1
+    Received array:  [{"accountId": "a", "assetClass": "other", "contractMultiplier": "1", "direction": "long", "entryAt": "2026-03-04T09:31:00.000Z", "entryFees": "0", "entryPrice": "bad", "exitAt": null, "exitPrice": null, "importFingerprint": "EURUSD|long|bad|2026-03-04T09:31:00.000Z|1", "quantity": "1", "status": "open", "stopLoss": null, "symbol": "EURUSD", "takeProfit": null}]
+
+    [0m [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m     [36mconst[39m preview [33m=[39m buildPreview(parsed[33m,[39m suggestMapping(parsed[33m.[39mheaders))[33m;[39m
+    [31m[1m>[22m[39m[90m 314 |[39m     expect(candidatesToTrades(preview[33m,[39m [32m"a"[39m))[33m.[39mtoHaveLength([35m0[39m)[33m;[39m
+     [90m     |[39m                                              [31m[1m^[22m[39m
+     [90m 315 |[39m   })[33m;[39m
+     [90m 316 |[39m })[33m;[39m
+     [90m 317 |[39m[0m
+
+      at Object.<anonymous> (src/lib/csv.test.ts:314:46)
+
+Test Suites: 1 failed, 1 total
+Tests:       9 failed, 34 passed, 43 total
+Snapshots:   0 total
+Time:        2.486 s, estimated 3 s
+Ran all test suites matching /src\\lib\\csv.test.ts/i.

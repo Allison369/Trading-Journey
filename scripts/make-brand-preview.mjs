@@ -1,0 +1,170 @@
+/**
+ * Writes brand-preview.html: a single page to eyeball the redrawn mark at the
+ * sizes and backgrounds it will actually be used at.
+ *
+ * Usage: node scripts/make-brand-preview.mjs
+ */
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(here, "..");
+
+const spec = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "apps", "mobile", "assets", "brand-mark-points.json"), "utf8")
+);
+const [tile] = fs.readFileSync(path.join(repoRoot, "apps", "mobile", "assets", "brand-mark.path"), "utf8").split("M").slice(1, 2).map((s) => "M" + s).map((s) => s.slice(0, s.indexOf("Z") + 1));
+
+const glyph = spec.loops
+  .map((loop) => {
+    const [start, ...rest] = loop;
+    return `M${start[0]} ${start[1]}${rest.map(([u, v]) => `L${u} ${v}`).join("")}Z`;
+  })
+  .join("");
+
+const mark = (size, cls = "") =>
+  `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 34 34" role="img" aria-label="TradeVault">
+        <path d="${tile}" fill="#141412"/>
+        <path d="${glyph}" fill="#FAFBF8" fill-rule="evenodd"/>
+      </svg>`;
+
+const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TradeVault — brand preview</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 "Segoe UI", system-ui, sans-serif; color: #141412; background: #f2f3ef; }
+  h1 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: #6b6b66; margin: 0 0 14px; }
+  section { background: #fff; border-radius: 18px; padding: 28px; margin: 0 auto 18px; max-width: 980px; }
+  .row { display: flex; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+  .cell { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .cap { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #8a8a84; }
+  .cream { background: #FAFBF8; padding: 18px; border-radius: 14px; display: inline-flex; }
+  .dark { background: #0B1220; padding: 18px; border-radius: 14px; display: inline-flex; }
+  .violet { background: #7C3AED; padding: 18px; border-radius: 14px; display: inline-flex; }
+  .lockup { display: inline-flex; align-items: center; gap: 11px; }
+  .lockup .name { font-weight: 700; font-size: 16.5px; letter-spacing: -.025em; }
+  .lockup .sub { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: #8a8a84; }
+  .sidebar { background: #0B1220; color: #e8e8ea; padding: 26px; border-radius: 14px; display: flex; gap: 11px; align-items: center; }
+  .sidebar .name { font-weight: 700; font-size: 16.5px; letter-spacing: -.025em; }
+  .sidebar .sub { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: #7b7b86; }
+  .mask { display: grid; place-items: center; background: #FAFBF8; }
+  .circle { border-radius: 50%; overflow: hidden; width: 200px; height: 200px; }
+  .squircle { border-radius: 30%; overflow: hidden; width: 200px; height: 200px; }
+  img { display: block; }
+  .note { color: #6b6b66; font-size: 13px; max-width: 60ch; }
+  .splash { background: #FAFBF8; border-radius: 18px; padding: 26px 0 0; display: grid; place-items: center; }
+</style>
+</head>
+<body style="padding: 26px">
+
+<section>
+  <h1>The mark, traced from your logo</h1>
+  <div class="row">
+    <div class="cell">
+      <div class="cream">${mark(220)}</div>
+      <div class="cap">220 px on cream</div>
+    </div>
+    <div class="cell">
+      <div class="cream">${mark(96)}</div>
+      <div class="cap">96 px</div>
+    </div>
+    <div class="cell">
+      <div class="cream">${mark(48)}</div>
+      <div class="cap">48 px</div>
+    </div>
+    <div class="cell">
+      <div class="cream">${mark(32)}</div>
+      <div class="cap">32 px</div>
+    </div>
+    <div class="cell">
+      <div class="dark">${mark(96)}</div>
+      <div class="cap">96 px on dark</div>
+    </div>
+    <div class="cell">
+      <div class="violet">${mark(96)}</div>
+      <div class="cap">96 px on the violet accent</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Launcher icon</h1>
+  <div class="row">
+    <div class="cell">
+      <img src="apps/mobile/assets/icon.png" width="220" height="220" alt="App icon">
+      <div class="cap">icon.png</div>
+    </div>
+    <div class="cell">
+      <div class="circle mask"><img src="apps/mobile/assets/icon.png" width="200" height="200" alt=""></div>
+      <div class="cap">masked circle</div>
+    </div>
+    <div class="cell">
+      <div class="squircle mask"><img src="apps/mobile/assets/icon.png" width="200" height="200" alt=""></div>
+      <div class="cap">masked squircle</div>
+    </div>
+    <div class="cell">
+      <div class="cream"><img src="apps/mobile/assets/adaptive-icon.png" width="160" height="160" alt=""></div>
+      <div class="cap">adaptive foreground</div>
+    </div>
+    <div class="cell">
+      <div class="cream" style="padding:10px"><img src="apps/mobile/assets/icon.png" width="40" height="40" alt=""></div>
+      <div class="cap">favicon size</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Splash</h1>
+  <div class="row">
+    <div class="cell">
+      <div class="splash" style="width:360px;height:360px"><img src="apps/mobile/assets/splash-icon.png" width="286" alt=""></div>
+      <div class="cap">cream background</div>
+    </div>
+    <div class="cell">
+      <div class="circle mask" style="width:300px;height:300px;background:#FAFBF8">
+        <img src="apps/mobile/assets/splash-icon.png" width="240" alt="">
+      </div>
+      <div class="cap">inside the Android 12 safe circle</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Lockup in the app chrome</h1>
+  <div class="row">
+    <div class="cell">
+      <div class="sidebar">
+        ${mark(34)}
+        <div>
+          <div class="name">TradeVault</div>
+          <div class="sub">Journal</div>
+        </div>
+      </div>
+      <div class="cap">dark sidebar (web + phone)</div>
+    </div>
+    <div class="cell">
+      <div class="lockup" style="background:#FAFBF8;padding:14px 18px;border-radius:14px">
+        ${mark(34)}
+        <div>
+          <div class="name">TradeVault</div>
+          <div class="sub">Trading journal</div>
+        </div>
+      </div>
+      <div class="cap">on cream</div>
+    </div>
+  </div>
+  <p class="note">The ink tile and cream glyph are fixed, so the mark reads the same on cream, on the dark UI and on the violet accent. Nothing purple is left in the favicon.</p>
+</section>
+
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(repoRoot, "brand-preview.html"), html);
+console.log("wrote brand-preview.html");
