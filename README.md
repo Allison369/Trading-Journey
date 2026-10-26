@@ -7,6 +7,7 @@ TradeVault is a **journal and analysis tool**. It does not place trades, connect
 to a broker, hold funds, or predict prices. It will not tell you a strategy
 works.
 
+https://alpha00log.netlify.app/
 ---
 
 ## What is in this repository
