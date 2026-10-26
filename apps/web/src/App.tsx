@@ -41,7 +41,7 @@ export function App() {
   const { loadState, loadError, reload, isOffline, user, authReady, isAdmin, signOut } = useApp();
   const { theme, toggle } = useTheme();
   const [page, setPage] = useState<PageId>("dashboard");
-  const [gate, setGate] = useState<Gate>(isOffline ? "app" : "landing");
+  const [gate, setGate] = useState<Gate>("landing");
 
   // Reset scroll when changing section; a long trades table would otherwise
   // leave the next page scrolled half-way down.
@@ -52,10 +52,6 @@ export function App() {
   // Someone signs in from the auth card; move them through to the app. Also
   // covers the case where a session already exists on load.
   useEffect(() => {
-    if (isOffline) {
-      setGate("app");
-      return;
-    }
     if (user) setGate("app");
   }, [isOffline, user]);
 
@@ -63,7 +59,9 @@ export function App() {
 
   // Landing page first. A signed-out visitor should meet the product before a
   // password box, and should be able to read what it is not before signing up.
-  if (!isOffline && !user && gate === "landing") {
+  // In offline mode there is nobody to sign in as, so the landing page offers
+  // a "look around offline" entry into the app instead.
+  if (!user && gate === "landing") {
     return (
       <LandingPage
         onSignIn={() => setGate("sign-in")}
